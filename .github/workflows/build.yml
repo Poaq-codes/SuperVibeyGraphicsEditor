@@ -26,7 +26,7 @@ jobs:
       - name: Build Windows app
         run: |
           echo "Starting build"
-          npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=win32 --arch=x64 --out=dist
+          npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=win32 --arch=x64 --icon=assets/app-icon.ico --out=dist
           echo "Build finished"
           ls -l dist
           ls -l dist/SuperVibeyGraphicsEditor-win32-x64
@@ -58,7 +58,7 @@ jobs:
       - name: Build macOS x64 app
         run: |
           echo "Starting build (x64)"
-          npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=darwin --arch=x64 --out=dist
+          npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=darwin --arch=x64 --icon=assets/app-icon.icns --out=dist
           echo "Build finished"
           ls -l dist
           ls -l dist/SuperVibeyGraphicsEditor-darwin-x64
@@ -90,7 +90,7 @@ jobs:
       - name: Build macOS arm64 app
         run: |
           echo "Starting build (arm64)"
-          npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=darwin --arch=arm64 --out=dist
+          npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=darwin --arch=arm64 --icon=assets/app-icon.icns --out=dist
           echo "Build finished"
           ls -l dist
           ls -l dist/SuperVibeyGraphicsEditor-darwin-arm64
