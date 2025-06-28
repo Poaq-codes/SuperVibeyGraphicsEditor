@@ -3,7 +3,7 @@ const canvas = new fabric.Canvas('c', {
   backgroundColor: '#fff'
 });
 
-// ✅ Locked border
+// ✅ Locked page border
 const border = new fabric.Rect({
   left: 0, top: 0,
   width: canvas.width,
@@ -260,7 +260,69 @@ canvas.on('mouse:up', function() {
   canvas.selection = true;
 });
 
-// ✅ Exports
+// --- Color picker ---
+const colorInput = document.getElementById('colorPicker');
+colorInput.addEventListener('input', (e) => {
+  const color = e.target.value;
+  const active = canvas.getActiveObject();
+  if (!active) return;
+
+  if (active.type === 'activeSelection') {
+    active.forEachObject(obj => {
+      if ('fill' in obj) {
+        obj.set('fill', color);
+      }
+    });
+  } else if ('fill' in active) {
+    active.set('fill', color);
+  }
+  canvas.requestRenderAll();
+});
+colorInput.addEventListener('change', () => {
+  saveState();
+});
+
+// --- Font Controls (new) ---
+const fontFamilyInput = document.getElementById('fontFamily');
+const fontSizeInput = document.getElementById('fontSize');
+const boldBtn = document.getElementById('boldBtn');
+const italicBtn = document.getElementById('italicBtn');
+
+function updateTextStyle(fn) {
+  const obj = canvas.getActiveObject();
+  if (obj) {
+    if (obj.type === 'activeSelection') {
+      obj.forEachObject(o => {
+        if (o.type === 'i-text' || o.type === 'textbox' || o.type === 'text') fn(o);
+      });
+    } else if (obj.type === 'i-text' || obj.type === 'textbox' || obj.type === 'text') {
+      fn(obj);
+    }
+    canvas.requestRenderAll();
+    saveState();
+  }
+}
+
+fontFamilyInput.addEventListener('change', (e) => {
+  updateTextStyle(obj => obj.set('fontFamily', e.target.value));
+});
+
+fontSizeInput.addEventListener('change', (e) => {
+  updateTextStyle(obj => obj.set('fontSize', parseInt(e.target.value, 10) || 24));
+});
+
+boldBtn.addEventListener('click', () => {
+  updateTextStyle(obj => obj.set('fontWeight', obj.fontWeight === 'bold' ? 'normal' : 'bold'));
+});
+
+italicBtn.addEventListener('click', () => {
+  updateTextStyle(obj => obj.set('fontStyle', obj.fontStyle === 'italic' ? 'normal' : 'italic'));
+});
+
+// --- Save on modify ---
+canvas.on('object:modified', saveState);
+
+// --- Exports ---
 function exportWithReset(exportFn) {
   const vt = canvas.viewportTransform;
   const zoom = canvas.getZoom();
@@ -315,30 +377,3 @@ document.getElementById('exportPDF').onclick = () => {
     doc.save('canvas_export.pdf');
   });
 };
-
-// ✅ Color picker
-const colorInput = document.getElementById('colorPicker');
-
-colorInput.addEventListener('input', (e) => {
-  const color = e.target.value;
-  const active = canvas.getActiveObject();
-  if (!active) return;
-
-  if (active.type === 'activeSelection') {
-    active.forEachObject(obj => {
-      if ('fill' in obj) {
-        obj.set('fill', color);
-      }
-    });
-  } else if ('fill' in active) {
-    active.set('fill', color);
-  }
-  canvas.requestRenderAll();
-});
-
-colorInput.addEventListener('change', () => {
-  saveState();
-});
-
-// ✅ Save on modify
-canvas.on('object:modified', saveState);

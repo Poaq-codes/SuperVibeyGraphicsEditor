@@ -3,29 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <title>SuperVibeyGraphicsEditor</title>
+  <!-- Google Fonts for Ubuntu and Roboto -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,400italic,700italic&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow: hidden; /* Body never scrolls */
+      overflow: hidden;
     }
     #toolbar {
       background: #ddd;
       padding: 10px;
       flex: 0 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
     }
     #scrollContainer {
       flex: 1 1 auto;
-      overflow: auto;              /* ✅ Scrolls when unzoomed and narrower */
+      overflow: auto;
     }
     #canvasWrapper {
-      width: fit-content;          /* ✅ Enables horizontal overflow */
-      margin: 0 auto;              /* ✅ Center when there’s room */
+      width: fit-content;
+      margin: 0 auto;
     }
     canvas {
       display: block;
+    }
+    /* Optional: Show button pressed style */
+    #boldBtn.active, #italicBtn.active {
+      background: #bbb;
     }
   </style>
 </head>
@@ -41,6 +52,19 @@
     <label style="margin-left:10px;">Color:
       <input type="color" id="colorPicker" value="#000000">
     </label>
+    <label style="margin-left:10px;">Font:
+      <select id="fontFamily">
+        <option value="Arial">Arial</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Ubuntu">Ubuntu</option>
+        <option value="Roboto">Roboto</option>
+      </select>
+    </label>
+    <label style="margin-left:5px;">Size:
+      <input type="number" id="fontSize" min="8" max="200" value="24" style="width:48px;">
+    </label>
+    <button id="boldBtn" title="Bold"><b>B</b></button>
+    <button id="italicBtn" title="Italic"><i>I</i></button>
   </div>
 
   <div id="scrollContainer">
