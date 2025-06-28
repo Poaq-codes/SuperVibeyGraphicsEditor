@@ -1,0 +1,12 @@
+{
+  "name": "SuperVibeyGraphicsEditor",
+  "version": "1.0.0",
+  "description": "Working Electron app with real SVG + PNG upload",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^29.0.0"
+  }
+}
