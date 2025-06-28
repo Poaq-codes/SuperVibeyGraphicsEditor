@@ -28,12 +28,11 @@ jobs:
           echo "Starting build"
           npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=win32 --arch=x64 --icon=assets/app-icon.ico --out=dist
           echo "Build finished"
-          ls -l dist
+          ls dist
 
       - name: Zip Windows build
         run: |
-          cd dist
-          zip -r SuperVibeyGraphicsEditor-windows-x64.zip SuperVibeyGraphicsEditor-win32-x64
+          Compress-Archive -Path dist\SuperVibeyGraphicsEditor-win32-x64\* -DestinationPath dist\SuperVibeyGraphicsEditor-windows-x64.zip
 
       - name: Upload Windows zip to Release
         uses: softprops/action-gh-release@v1
