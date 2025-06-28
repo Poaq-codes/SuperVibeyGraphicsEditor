@@ -18,15 +18,12 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        working-directory: SuperVibeyGraphicsEditor
         run: npm install
 
       - name: Install electron-packager
-        working-directory: SuperVibeyGraphicsEditor
         run: npm install --save-dev electron-packager
 
       - name: Build Windows app
-        working-directory: SuperVibeyGraphicsEditor
         run: |
           echo "Starting build"
           npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=win32 --arch=x64 --out=dist
@@ -38,7 +35,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SuperVibeyGraphicsEditor-windows
-          path: SuperVibeyGraphicsEditor/dist/SuperVibeyGraphicsEditor-win32-x64/**
+          path: dist/SuperVibeyGraphicsEditor-win32-x64/**
 
   build-macos-x64:
     runs-on: macos-latest
@@ -53,15 +50,12 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        working-directory: SuperVibeyGraphicsEditor
         run: npm install
 
       - name: Install electron-packager
-        working-directory: SuperVibeyGraphicsEditor
         run: npm install --save-dev electron-packager
 
       - name: Build macOS x64 app
-        working-directory: SuperVibeyGraphicsEditor
         run: |
           echo "Starting build (x64)"
           npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=darwin --arch=x64 --out=dist
@@ -73,7 +67,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SuperVibeyGraphicsEditor-macos-x64
-          path: SuperVibeyGraphicsEditor/dist/SuperVibeyGraphicsEditor-darwin-x64/**
+          path: dist/SuperVibeyGraphicsEditor-darwin-x64/**
 
   build-macos-arm64:
     runs-on: macos-latest
@@ -88,15 +82,12 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        working-directory: SuperVibeyGraphicsEditor
         run: npm install
 
       - name: Install electron-packager
-        working-directory: SuperVibeyGraphicsEditor
         run: npm install --save-dev electron-packager
 
       - name: Build macOS arm64 app
-        working-directory: SuperVibeyGraphicsEditor
         run: |
           echo "Starting build (arm64)"
           npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=darwin --arch=arm64 --out=dist
@@ -108,4 +99,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SuperVibeyGraphicsEditor-macos-arm64
-          path: SuperVibeyGraphicsEditor/dist/SuperVibeyGraphicsEditor-darwin-arm64/**
+          path: dist/SuperVibeyGraphicsEditor-darwin-arm64/**
