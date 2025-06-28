@@ -451,3 +451,5 @@ document.getElementById('exportPDF').onclick = () => exportWithReset(() => {
   const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: [canvas.width, canvas.height] });
   doc.addImage(dataURL, 'PNG', 0, 0, canvas.width, canvas.height); doc.save('canvas_export.pdf');
 });
+
+
