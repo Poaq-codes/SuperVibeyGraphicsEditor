@@ -1,0 +1,111 @@
+name: Build Electron Apps
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        working-directory: SuperVibeyGraphicsEditor
+        run: npm install
+
+      - name: Install electron-packager
+        working-directory: SuperVibeyGraphicsEditor
+        run: npm install --save-dev electron-packager
+
+      - name: Build Windows app
+        working-directory: SuperVibeyGraphicsEditor
+        run: |
+          echo "Starting build"
+          npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=win32 --arch=x64 --out=dist
+          echo "Build finished"
+          ls -l dist
+          ls -l dist/SuperVibeyGraphicsEditor-win32-x64
+
+      - name: Upload Windows Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: SuperVibeyGraphicsEditor-windows
+          path: SuperVibeyGraphicsEditor/dist/SuperVibeyGraphicsEditor-win32-x64/**
+
+  build-macos-x64:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        working-directory: SuperVibeyGraphicsEditor
+        run: npm install
+
+      - name: Install electron-packager
+        working-directory: SuperVibeyGraphicsEditor
+        run: npm install --save-dev electron-packager
+
+      - name: Build macOS x64 app
+        working-directory: SuperVibeyGraphicsEditor
+        run: |
+          echo "Starting build (x64)"
+          npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=darwin --arch=x64 --out=dist
+          echo "Build finished"
+          ls -l dist
+          ls -l dist/SuperVibeyGraphicsEditor-darwin-x64
+
+      - name: Upload macOS x64 Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: SuperVibeyGraphicsEditor-macos-x64
+          path: SuperVibeyGraphicsEditor/dist/SuperVibeyGraphicsEditor-darwin-x64/**
+
+  build-macos-arm64:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        working-directory: SuperVibeyGraphicsEditor
+        run: npm install
+
+      - name: Install electron-packager
+        working-directory: SuperVibeyGraphicsEditor
+        run: npm install --save-dev electron-packager
+
+      - name: Build macOS arm64 app
+        working-directory: SuperVibeyGraphicsEditor
+        run: |
+          echo "Starting build (arm64)"
+          npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=darwin --arch=arm64 --out=dist
+          echo "Build finished"
+          ls -l dist
+          ls -l dist/SuperVibeyGraphicsEditor-darwin-arm64
+
+      - name: Upload macOS arm64 Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: SuperVibeyGraphicsEditor-macos-arm64
+          path: SuperVibeyGraphicsEditor/dist/SuperVibeyGraphicsEditor-darwin-arm64/**
