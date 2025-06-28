@@ -29,13 +29,18 @@ jobs:
           npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=win32 --arch=x64 --icon=assets/app-icon.ico --out=dist
           echo "Build finished"
           ls -l dist
-          ls -l dist/SuperVibeyGraphicsEditor-win32-x64
 
-      - name: Upload Windows Build
-        uses: actions/upload-artifact@v4
+      - name: Zip Windows build
+        run: |
+          cd dist
+          zip -r SuperVibeyGraphicsEditor-windows-x64.zip SuperVibeyGraphicsEditor-win32-x64
+
+      - name: Upload Windows zip to Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: SuperVibeyGraphicsEditor-windows
-          path: dist/SuperVibeyGraphicsEditor-win32-x64/**
+          files: dist/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-macos-x64:
     runs-on: macos-latest
@@ -61,13 +66,18 @@ jobs:
           npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=darwin --arch=x64 --icon=assets/app-icon.icns --out=dist
           echo "Build finished"
           ls -l dist
-          ls -l dist/SuperVibeyGraphicsEditor-darwin-x64
 
-      - name: Upload macOS x64 Build
-        uses: actions/upload-artifact@v4
+      - name: Zip macOS x64 build
+        run: |
+          cd dist
+          zip -r SuperVibeyGraphicsEditor-macos-x64.zip SuperVibeyGraphicsEditor-darwin-x64
+
+      - name: Upload macOS x64 zip to Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: SuperVibeyGraphicsEditor-macos-x64
-          path: dist/SuperVibeyGraphicsEditor-darwin-x64/**
+          files: dist/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-macos-arm64:
     runs-on: macos-latest
@@ -93,10 +103,15 @@ jobs:
           npx electron-packager . SuperVibeyGraphicsEditor --overwrite --platform=darwin --arch=arm64 --icon=assets/app-icon.icns --out=dist
           echo "Build finished"
           ls -l dist
-          ls -l dist/SuperVibeyGraphicsEditor-darwin-arm64
 
-      - name: Upload macOS arm64 Build
-        uses: actions/upload-artifact@v4
+      - name: Zip macOS arm64 build
+        run: |
+          cd dist
+          zip -r SuperVibeyGraphicsEditor-macos-arm64.zip SuperVibeyGraphicsEditor-darwin-arm64
+
+      - name: Upload macOS arm64 zip to Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: SuperVibeyGraphicsEditor-macos-arm64
-          path: dist/SuperVibeyGraphicsEditor-darwin-arm64/**
+          files: dist/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
