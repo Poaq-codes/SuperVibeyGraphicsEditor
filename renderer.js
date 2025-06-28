@@ -3,7 +3,7 @@ const canvas = new fabric.Canvas('c', {
   backgroundColor: '#fff'
 });
 
-// ✅ Fixed border Rect — locked page frame
+// ✅ Locked border
 const border = new fabric.Rect({
   left: 0, top: 0,
   width: canvas.width,
@@ -32,7 +32,7 @@ function saveState() {
   }
 }
 
-// --- UPLOAD: auto-group everything ---
+// --- Upload ---
 document.addEventListener('dragover', (e) => e.preventDefault());
 document.addEventListener('drop', (e) => {
   e.preventDefault();
@@ -150,7 +150,7 @@ canvas.upperCanvasEl.addEventListener('contextmenu', (e) => {
   }
 });
 
-// ✅ Undo / redo — re-adds border every time
+// ✅ Undo / redo
 document.getElementById('undo').onclick = () => {
   if (undoStack.length > 1) {
     redoStack.push(undoStack.pop());
@@ -185,7 +185,7 @@ document.getElementById('redo').onclick = () => {
   }
 };
 
-// ✅ Keyboard: Ctrl/Cmd+Z for undo, Ctrl+Shift+Z for redo
+// ✅ Ctrl+Z / Shift+Z
 document.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
     if (e.shiftKey) {
@@ -197,12 +197,12 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// ✅ Backspace or Delete removes selection — but skips if editing text
+// ✅ Backspace/Delete: skip if editing
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Backspace' || e.key === 'Delete') {
     const active = canvas.getActiveObject();
     if (active && active !== border) {
-      if (active.isEditing) return; // ✅ Let Fabric handle text editing
+      if (active.isEditing) return;
 
       if (active.type === 'activeSelection') {
         active.forEachObject(obj => {
@@ -219,7 +219,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// Zoom
+// ✅ Zoom in/out
 document.addEventListener('wheel', (e) => {
   if (e.ctrlKey) {
     const zoom = canvas.getZoom();
@@ -229,7 +229,38 @@ document.addEventListener('wheel', (e) => {
   }
 }, { passive: false });
 
-// Exports with zoom reset
+// ✅ Drag-to-pan with middle button or Alt key
+let isDragging = false;
+let lastPosX, lastPosY;
+
+canvas.on('mouse:down', function(opt) {
+  const evt = opt.e;
+  if (evt.altKey || evt.button === 1) {
+    isDragging = true;
+    canvas.selection = false;
+    lastPosX = evt.clientX;
+    lastPosY = evt.clientY;
+  }
+});
+
+canvas.on('mouse:move', function(opt) {
+  if (isDragging) {
+    const e = opt.e;
+    const vpt = canvas.viewportTransform;
+    vpt[4] += e.clientX - lastPosX;
+    vpt[5] += e.clientY - lastPosY;
+    canvas.requestRenderAll();
+    lastPosX = e.clientX;
+    lastPosY = e.clientY;
+  }
+});
+
+canvas.on('mouse:up', function() {
+  isDragging = false;
+  canvas.selection = true;
+});
+
+// ✅ Exports
 function exportWithReset(exportFn) {
   const vt = canvas.viewportTransform;
   const zoom = canvas.getZoom();
@@ -285,7 +316,7 @@ document.getElementById('exportPDF').onclick = () => {
   });
 };
 
-// ✅ Color picker live + undo on change
+// ✅ Color picker
 const colorInput = document.getElementById('colorPicker');
 
 colorInput.addEventListener('input', (e) => {
@@ -309,5 +340,5 @@ colorInput.addEventListener('change', () => {
   saveState();
 });
 
-// ✅ Save on modify only
+// ✅ Save on modify
 canvas.on('object:modified', saveState);

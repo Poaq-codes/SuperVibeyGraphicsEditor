@@ -4,20 +4,28 @@
   <meta charset="UTF-8" />
   <title>SuperVibeyGraphicsEditor</title>
   <style>
-    body { margin: 0; }
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden; /* Body never scrolls */
+    }
     #toolbar {
       background: #ddd;
       padding: 10px;
+      flex: 0 0 auto;
     }
-    #canvasContainer {
-      display: flex;
-      justify-content: center; /* horizontally center */
-      align-items: flex-start; /* or center for full page vertical */
-      padding: 20px;
+    #scrollContainer {
+      flex: 1 1 auto;
+      overflow: auto;              /* ✅ Scrolls when unzoomed and narrower */
+    }
+    #canvasWrapper {
+      width: fit-content;          /* ✅ Enables horizontal overflow */
+      margin: 0 auto;              /* ✅ Center when there’s room */
     }
     canvas {
       display: block;
-      /* ✅ No fixed border */
     }
   </style>
 </head>
@@ -35,9 +43,10 @@
     </label>
   </div>
 
-  <!-- ✅ Wrap your canvas in a flex container -->
-  <div id="canvasContainer">
-    <canvas id="c" width="816" height="1056"></canvas>
+  <div id="scrollContainer">
+    <div id="canvasWrapper">
+      <canvas id="c" width="816" height="1056"></canvas>
+    </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
