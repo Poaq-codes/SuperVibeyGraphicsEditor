@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <title>SuperVibeyGraphicsEditor</title>
-  <!-- Google Fonts for Ubuntu and Roboto -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,400italic,700italic&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic&display=swap" rel="stylesheet">
   <style>
@@ -34,7 +33,6 @@
     canvas {
       display: block;
     }
-    /* Optional: Show button pressed style */
     #boldBtn.active, #italicBtn.active {
       background: #bbb;
     }
@@ -49,10 +47,10 @@
     <button id="exportSVG">Export SVG</button>
     <button id="exportPNG">Export PNG</button>
     <button id="exportPDF">Export PDF</button>
-    <label style="margin-left:10px;">Color:
+    <label>Color:
       <input type="color" id="colorPicker" value="#000000">
     </label>
-    <label style="margin-left:10px;">Font:
+    <label>Font:
       <select id="fontFamily">
         <option value="Arial">Arial</option>
         <option value="Times New Roman">Times New Roman</option>
@@ -60,11 +58,20 @@
         <option value="Roboto">Roboto</option>
       </select>
     </label>
-    <label style="margin-left:5px;">Size:
+    <label>Size:
       <input type="number" id="fontSize" min="8" max="200" value="24" style="width:48px;">
     </label>
-    <button id="boldBtn" title="Bold"><b>B</b></button>
-    <button id="italicBtn" title="Italic"><i>I</i></button>
+    <button id="boldBtn"><b>B</b></button>
+    <button id="italicBtn"><i>I</i></button>
+    <button id="copyBtn">Copy</button>
+    <button id="pasteBtn">Paste</button>
+    <button id="cutBtn">Cut</button>
+    <label>Angle:
+      <input type="number" id="angleInput" min="0" max="360" step="1" style="width:60px;">
+    </label>
+    <label style="margin-left: 10px;">
+      <input type="checkbox" id="gridToggle"> Show Grid
+    </label>
   </div>
 
   <div id="scrollContainer">
