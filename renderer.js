@@ -34,8 +34,28 @@ function saveState() {
 document.addEventListener('dragover', (e) => e.preventDefault());
 document.addEventListener('drop', (e) => {
   e.preventDefault();
-  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  if (e.dataTransfer.files.length) {
+    const file = e.dataTransfer.files[0];
+    if (file.name.endsWith('.json')) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        canvas.loadFromJSON(event.target.result, () => {
+          if (!canvas.getObjects().includes(border)) {
+            canvas.add(border);
+            canvas.sendToBack(border);
+          }
+          if (gridToggle.checked) drawGrid();
+          canvas.renderAll();
+          saveState();
+        });
+      };
+      reader.readAsText(file);
+    } else {
+      handleFile(file);
+    }
+  }
 });
+
 
 document.getElementById('upload').onclick = () => {
   const input = document.createElement('input');
@@ -452,4 +472,37 @@ document.getElementById('exportPDF').onclick = () => exportWithReset(() => {
   doc.addImage(dataURL, 'PNG', 0, 0, canvas.width, canvas.height); doc.save('canvas_export.pdf');
 });
 
+document.getElementById('saveProject').onclick = () => {
+  const json = JSON.stringify(canvas.toJSON(['excludeFromExport']));
+  const blob = new Blob([json], { type: 'application/json' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'project.json';
+  link.click();
+};
+
+document.getElementById('loadProject').onclick = () => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      canvas.loadFromJSON(event.target.result, () => {
+        // ✅ Re-add border if missing:
+        if (!canvas.getObjects().includes(border)) {
+          canvas.add(border);
+          canvas.sendToBack(border);
+        }
+        // ✅ If grid was on, redraw:
+        if (gridToggle.checked) drawGrid();
+        canvas.renderAll();
+        saveState();
+      });
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+};
 
