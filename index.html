@@ -82,6 +82,28 @@
     </div>
   </div>
 
+  <div id="pngExportModal" style="
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: none;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+">
+  <div style="
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+  ">
+    <p>Export PNG with:</p>
+    <button id="exportPngTransparentBtn">Transparent Background</button>
+    <button id="exportPngWhiteBtn">White Background</button>
+  </div>
+</div>
+
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="renderer.js"></script>

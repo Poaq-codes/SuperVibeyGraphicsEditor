@@ -453,16 +453,45 @@ document.getElementById('exportSVG').onclick = () => exportWithReset(() => {
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob); link.download = 'canvas_export.svg'; link.click();
 });
-document.getElementById('exportPNG').onclick = () => exportWithReset(() => {
-  const white = confirm('Export with white background?'), prevBg = canvas.backgroundColor;
-  if (white) canvas.backgroundColor = '#fff';
-  border.visible = false; if (gridGroup) gridGroup.visible = false;
-  const pngData = canvas.toDataURL({ format: 'png', multiplier: 3 });
-  border.visible = true; if (gridGroup) gridGroup.visible = true;
-  canvas.backgroundColor = prevBg;
-  const link = document.createElement('a'); link.href = pngData;
-  link.download = 'canvas_export.png'; link.click();
-});
+document.getElementById('exportPNG').onclick = () => {
+  document.getElementById('pngExportModal').style.display = 'flex';
+};
+
+document.getElementById('exportPngTransparentBtn').onclick = () => {
+  runPngExport(false);
+  document.getElementById('pngExportModal').style.display = 'none';
+};
+document.getElementById('exportPngWhiteBtn').onclick = () => {
+  runPngExport(true);
+  document.getElementById('pngExportModal').style.display = 'none';
+};
+
+function runPngExport(useWhite) {
+  exportWithReset(() => {
+    const prevBg = canvas.backgroundColor;
+    if (useWhite) {
+      canvas.setBackgroundColor('#fff', canvas.renderAll.bind(canvas));
+    } else {
+      canvas.setBackgroundColor('', canvas.renderAll.bind(canvas));
+    }
+
+    border.visible = false;
+    if (gridGroup) gridGroup.visible = false;
+
+    const pngData = canvas.toDataURL({ format: 'png', multiplier: 3 });
+
+    border.visible = true;
+    if (gridGroup) gridGroup.visible = true;
+
+    canvas.setBackgroundColor(prevBg, canvas.renderAll.bind(canvas));
+
+    const link = document.createElement('a');
+    link.href = pngData;
+    link.download = 'canvas_export.png';
+    link.click();
+  });
+}
+
 document.getElementById('exportPDF').onclick = () => exportWithReset(() => {
   border.visible = false; if (gridGroup) gridGroup.visible = false;
   const dataURL = canvas.toDataURL({ format: 'png', multiplier: 3 });
