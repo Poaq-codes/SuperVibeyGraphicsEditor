@@ -445,26 +445,30 @@ function exportWithReset(fn) {
   fn(); canvas.setViewportTransform(vt); canvas.setZoom(zoom);
 }
 
-document.getElementById('exportSVG').onclick = () => exportWithReset(() => {
-  border.visible = false; if (gridGroup) gridGroup.visible = false;
-  const svg = canvas.toSVG();
-  border.visible = true; if (gridGroup) gridGroup.visible = true;
-  const blob = new Blob([svg], { type: 'image/svg+xml' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob); link.download = 'canvas_export.svg'; link.click();
-});
 document.getElementById('exportPNG').onclick = () => {
   document.getElementById('pngExportModal').style.display = 'flex';
 };
 
 document.getElementById('exportPngTransparentBtn').onclick = () => {
-  runPngExport(false);
+  const selectedOnly = document.getElementById('exportSelectedOnly').checked;
+  if (selectedOnly) {
+    exportSelectedAsPNG(false);
+  } else {
+    runPngExport(false);
+  }
   document.getElementById('pngExportModal').style.display = 'none';
 };
+
 document.getElementById('exportPngWhiteBtn').onclick = () => {
-  runPngExport(true);
+  const selectedOnly = document.getElementById('exportSelectedOnly').checked;
+  if (selectedOnly) {
+    exportSelectedAsPNG(true);
+  } else {
+    runPngExport(true);
+  }
   document.getElementById('pngExportModal').style.display = 'none';
 };
+
 
 function runPngExport(useWhite) {
   exportWithReset(() => {
@@ -491,6 +495,42 @@ function runPngExport(useWhite) {
     link.click();
   });
 }
+
+function exportSelectedAsPNG(useWhite) {
+  const active = canvas.getActiveObject();
+  if (!active) {
+    alert('No object selected.');
+    return;
+  }
+
+  const group = (active.type === 'activeSelection') ? active.toGroup() : new fabric.Group([active]);
+  const bounds = group.getBoundingRect(true);
+
+  const tempCanvas = new fabric.StaticCanvas(null, {
+    backgroundColor: useWhite ? '#fff' : ''
+  });
+  tempCanvas.setWidth(bounds.width);
+  tempCanvas.setHeight(bounds.height);
+
+  group.clone(clone => {
+    clone.left -= bounds.left;
+    clone.top -= bounds.top;
+    clone.originX = 'left';
+    clone.originY = 'top';
+    clone.setCoords();
+
+    tempCanvas.add(clone);
+    tempCanvas.renderAll();
+
+    const pngData = tempCanvas.toDataURL({ format: 'png', multiplier: 3 });
+
+    const link = document.createElement('a');
+    link.href = pngData;
+    link.download = 'selection_export.png';
+    link.click();
+  });
+}
+
 
 document.getElementById('exportPDF').onclick = () => exportWithReset(() => {
   border.visible = false; if (gridGroup) gridGroup.visible = false;
